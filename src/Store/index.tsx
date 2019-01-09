@@ -4,6 +4,6 @@ import {reducer as todoReducer} from '../todos'
 
 const reducer=combineReducers({
     todos:todoReducer,
-    filter:filterReducer
+    // filter:filterReducer
 })
 export default createStore(reducer);
