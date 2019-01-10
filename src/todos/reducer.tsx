@@ -1,11 +1,15 @@
-import { ADD_TODO, REMOVE_TODO, TOGGLE_TODO,IData} from "./actionTypes";
-
+import { ADD_TODO, REMOVE_TODO, TOGGLE_TODO} from "./actionTypes";
+import {IData} from './actions'
 const initState:IData[]=[{
     id:9999,
     text:'cc',
     completed:false
 }]
-export default (state=initState, action: any) => {
+type IAction=Readonly<{
+    type:string;
+}>&IData;
+
+export default (state=initState, action:IAction) => {
     switch (action.type) {
         case ADD_TODO: {
             console.log('add');
@@ -20,7 +24,7 @@ export default (state=initState, action: any) => {
         }
         case TOGGLE_TODO: {
             console.log('toggle');
-            return state.map((todoItem: any) => {
+            return state.map((todoItem: IData) => {
                 if (todoItem.id === action.id) {
                     return { ...todoItem, completed: !todoItem.completed }
                 } else {
@@ -30,7 +34,7 @@ export default (state=initState, action: any) => {
         }
         case REMOVE_TODO: {
             console.log('remove');
-            return state.filter((todoItem: any) => {
+            return state.filter((todoItem: IData) => {
                 return todoItem.id !== action.id;
             })
         }

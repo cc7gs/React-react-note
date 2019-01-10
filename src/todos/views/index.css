@@ -13,7 +13,6 @@
     font-size: 30px;
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
-    font-smoothing: antialiased;
   }
   
   .add-todo .add-btn {
@@ -41,8 +40,8 @@
   
   .todo-item .toggle {
     height: 40px;
-    -webkit-appearance: none;
-    appearance: none;
+    -webkit-appearance: none; 
+     appearance: none;
     position: absolute;
     top: 0;
     bottom: 0;

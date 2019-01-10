@@ -1,8 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import TodoItem from './todoItem'
-import { toggleTodo, removeTodo } from '../actions';
-const TodoList=({todos,onToggleTodo,onRemoveTodo}:any)=>{
+import { toggleTodo, removeTodo,IData } from '../actions';
+import {FilterTypes} from '../../constants'
+type IProps=Readonly<{
+    todos:IData[];
+    onToggleTodo:(id:string)=>void;
+    onRemoveTodo:(id:string)=>void
+}>
+const TodoList=({todos,onToggleTodo,onRemoveTodo}:IProps)=>{
     return(
         <ul className="todo-list">
             {
@@ -19,10 +25,22 @@ const TodoList=({todos,onToggleTodo,onRemoveTodo}:any)=>{
         </ul>
     )
 }
+const selectVisible=(todos:IData[],filter:string)=>{
+    switch(filter){
+        case FilterTypes.ALL:
+            return todos;
+        case FilterTypes.COMPLETED:
+            return todos.filter((item:IData)=>item.completed)
+        case FilterTypes.UNCOMPLETED:
+            return todos.filter((item:IData)=>!item.completed)
+        default:
+            throw new Error('unsupported filter');
+    }
+}
 const mapStateToProps=(state:any)=>{
-    console.log(state);
+   
     return{
-        todos:state.todos
+        todos:selectVisible(state.todos,state.filter)
     }
 }
 const mapDispatchToProps={

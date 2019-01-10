@@ -1,5 +1,5 @@
 import React from 'react';
-import AddTodo from './addTodo'
+import AddTodo from './addTodo1'
 import TodoList from './todoList'
 import './index.css'
 export default () => {

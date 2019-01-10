@@ -15,3 +15,9 @@ export const removeTodo= (id:string) => ({
     type: REMOVE_TODO,
     id
 });
+
+export type IData=Readonly<{
+    id:number;
+    text:string;
+    completed:boolean;
+}>;
