@@ -6,6 +6,7 @@
     "@types/jest": "23.3.12",
     "@types/node": "10.12.18",
     "@types/react": "16.7.18",
+    "@types/react-addons-perf": "^0.14.18",
     "@types/react-dom": "16.0.11",
     "@types/react-redux": "^6.0.12",
     "react": "^16.7.0",
@@ -30,5 +31,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {}
 }

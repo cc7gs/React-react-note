@@ -82,6 +82,50 @@ import {actions,reducer,view as TodoList} from '../todoList';
     Store上的每个state只能通过reducer来更改,而每个reducer只能更改redux状态树上一个节点下的数据。
 
 
+# React组件在React-redux中性能优化
+react 在渲染数据时采用的"浅层比较"的方式只看这两个prop是不是同一个对象的引用。
+## 样式写法优化
+**Bad**
+```
+<Todo style={{color:'red'}}/>
+```
+**Good**
+```
+//确保初始化只执行一次,不要放到render中
+const fooStyle={color:'red'};
+
+<Foo style={fooStyle}/>
+```
+## props 函数传递方式
+**Bad**
+```
+<TodoItem
+    key={item.id}
+    text={item.text}
+    completed={item.completed}
+    onToggle={()=>{ onToggleTodo(item.id)}}
+    onRemove={()=>onRemoveTodo(item.id)}
+ />
+```
+```
+<TodoItem
+    key={item.id}
+    id={item.id}
+    text={item.text}
+    completed={item.completed}
+ />
+ 
+const mapDispatchToProps=(dispatch,ownProps)=>{
+   const {id}=ownProps;
+   return{
+       onToggle:()=>dispatch(toggleTodo(id)),
+       onRemove:()=>dispatch(removeTodo(id))
+   }
+}
+```
+
+
+
 
 
 

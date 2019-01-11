@@ -1,26 +1,23 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import TodoItem from './todoItem'
-import { toggleTodo, removeTodo,IData } from '../actions';
+import {IData } from '../actions';
 import {FilterTypes} from '../../constants'
 type IProps=Readonly<{
     todos:IData[];
-    onToggleTodo:(id:string)=>void;
-    onRemoveTodo:(id:string)=>void
 }>
-const TodoList=({todos,onToggleTodo,onRemoveTodo}:IProps)=>{
+const TodoList=({todos}:IProps)=>{
     return(
         <ul className="todo-list">
             {
-                todos.map((item:any)=>{
-                    return <TodoItem
+                todos.map((item)=>(
+                     <TodoItem
                         key={item.id}
+                        id={item.id}
                         text={item.text}
                         completed={item.completed}
-                        onToggle={()=>{ console.log(item.id); onToggleTodo(item.id)}}
-                        onRemove={()=>onRemoveTodo(item.id)}
                     />
-                })
+                ))
             }
         </ul>
     )
@@ -38,13 +35,8 @@ const selectVisible=(todos:IData[],filter:string)=>{
     }
 }
 const mapStateToProps=(state:any)=>{
-   
     return{
         todos:selectVisible(state.todos,state.filter)
     }
 }
-const mapDispatchToProps={
-        onToggleTodo:toggleTodo,
-        onRemoveTodo:removeTodo
-}
-export default connect(mapStateToProps,mapDispatchToProps)(TodoList);
+export default connect(mapStateToProps)(TodoList);

@@ -12,7 +12,6 @@ type IAction=Readonly<{
 export default (state=initState, action:IAction) => {
     switch (action.type) {
         case ADD_TODO: {
-            console.log('add');
             return [
                 {
                     id: action.id,
@@ -33,7 +32,6 @@ export default (state=initState, action:IAction) => {
             });
         }
         case REMOVE_TODO: {
-            console.log('remove');
             return state.filter((todoItem: IData) => {
                 return todoItem.id !== action.id;
             })
