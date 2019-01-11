@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 const TodoItem = (props: any) => {
     const { onToggle, onRemove, completed, text } = props;
     const checkedProp = completed ? { checked: true } : {};
-    console.log('todoItem. 被调用');
     return (<li
         className="todo-item"
         style={{ textDecoration: completed ? 'line-through' : 'none' }}

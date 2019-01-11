@@ -107,6 +107,7 @@ const fooStyle={color:'red'};
     onRemove={()=>onRemoveTodo(item.id)}
  />
 ```
+上面的做法中，我们将回调函数传递给子组件的onClick事件，redux认为每次都是一个新的函数,所以,我们可以将要传递的参数以属性传递给组件,让子组件去传递函数(mapDispathToProps中)
 ```
 <TodoItem
     key={item.id}
@@ -115,17 +116,27 @@ const fooStyle={color:'red'};
     completed={item.completed}
  />
  
-const mapDispatchToProps=(dispatch,ownProps)=>{
-   const {id}=ownProps;
-   return{
-       onToggle:()=>dispatch(toggleTodo(id)),
-       onRemove:()=>dispatch(removeTodo(id))
-   }
+const mapDispatchToProps = (dispath: any, ownProps: any) => {
+    const { id } = ownProps;
+    return {
+        onToggle: () => { console.log('onToggle'); dispath(toggleTodo(id)) },
+        onRemove: () => dispath(removeTodo(id))
+    }
 }
+//木偶组件应该用connect包起来，让redux 判读props是否改变
+export default connect(null,mapDispatchToProps)(TodoItem);
 ```
+# React组件访问服务器的优缺点
+ **优点：**
+   - 直接简单,容易理解
+   - 代码非常清晰
 
+**缺点：**
+   - 状态放到组件，使其变得庞大复杂
 
+**改进：**
+ 我们可以使用 Redux做状态管理来访问服务器。
+   - 使用 redux-thunk中间件 来解决异步请求问题
 
-
-
+![redux-thunk](./redux_thunk.jpg)
 

@@ -5,7 +5,7 @@ export const addTodo=(text:string) => ({
     type: ADD_TODO,
     completed: false,
     id: nextTodoId++,
-    text
+    text    
 });
 export const toggleTodo = (id:string) => ({
     type: TOGGLE_TODO,
