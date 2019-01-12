@@ -10,7 +10,7 @@ export const fetchWeather=(cityCode:string)=>{
             if(response.status!==200){
                 throw new Error('Fail to get response will start'+response.status);
             }
-            response.json().then((weatherinfo)=>{
+            response.json().then(({weatherinfo})=>{
                 dispatch(fetchWeatherSuccess(weatherinfo))
             })
             .catch(error=>{

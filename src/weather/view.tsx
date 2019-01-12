@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as Status from './status'
 const Weather = ({ status, cityName, weather, lowestTemp, highestTemp }: any) => {
-    console.log(Status);
     switch (status) {
         case Status.LOADING:
             return <div>正在加载数据...</div>
@@ -17,7 +16,8 @@ const Weather = ({ status, cityName, weather, lowestTemp, highestTemp }: any) =>
     }
 }
 const mapStateToProps = (state: any) => {
-    console.log(status,'----------status');
+    console.log(state,'weahterData');
+
     const weatherData = state.weather;
     return {
         status: weatherData.status,
