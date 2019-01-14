@@ -6,7 +6,7 @@
     3. 数据改变只能通过纯函数完成
 
 ## 容器组件和木偶组件
-在 Redux框架下，一个Reactz组件基本上就是要完成以下两个功能:
+在 Redux框架下，一个React组件基本上就是要完成以下两个功能:
 
    - 和 Redux Store打交道,读取Store的状态,用于初始化组件的状态，同时还要监听 Store的状态改变;当Store状态发生变化时，需要更新组件状态，从而驱动组件重新渲染;当需要更新Store状态时,就要派发action对象；
    - 根据当前Props和state,渲染出用户界面
@@ -137,6 +137,80 @@ export default connect(null,mapDispatchToProps)(TodoItem);
 **改进：**
  我们可以使用 Redux做状态管理来访问服务器。
    - 使用 redux-thunk中间件 来解决异步请求问题
-
 ![redux-thunk](./redux_thunk.jpg)
 
+## 异步操作的终止
+对于访问服务器这样的异步操作，从发起操作到操作结束，都会有段时间延迟，在
+这段延迟时间中，用户可能希望中止异步操作。
+访问服务器这样的输入输出操作，复杂就复杂在返回的结果和时间都是不可靠的，即使是访问同样一个服务器，也完全可能先发出的请求后收到结果。
+
+案例场景: 如果一个用户从一个请求发出到获得响应的过程中，用户等不及，或者改变主意想要执行另一个操作，用户就会进行一些操作发送新的请求发往服务器。
+
+解决方案:
+1. 我们可以从视图入手,当API请求发送出去后,立即将城市选择器锁住,设为不可改变,直到API请求返回结果才解锁。
+
+**缺点:**
+ 用户体验不是很好,因为服务器响应是不可控的,锁的时间由服务器响应时间来决定，这不是一个最好方案。
+2. 我们选择用户最后一次提交请求，其它请求我们将丢弃。
+
+下面我们对一个天气请求函数分析(代码采用tyescript 如果不用则将类型定义去掉就可以了):
+**不加中断:**
+
+```javascript
+export const fetchWeather=(cityCode:string)=>{
+    return (dispatch:any)=>{
+       const apiUrl=`/data/cityinfo/${cityCode}.html`;
+        dispatch(fetchWeatherStarted())
+       fetch(apiUrl)
+        .then(response=>{
+            if(response.status!==200){
+                throw new Error('Fail to get response will start'+response.status);
+            }
+            response.json().then(({weatherinfo})=>{
+                dispatch(fetchWeatherSuccess(weatherinfo))
+            })
+            .catch(error=>{
+                throw new Error('Invaild json response'+error);
+            })
+        })
+        .catch(error=>{
+            dispatch(fetchWeatherFilure(error))
+        })        
+    }
+};
+```
+**添加中断:**
+```javascript
+let nextSeqId=0;
+export const fetchWeather=(cityCode:string)=>{
+    return (dispatch:any)=>{
+        console.log('function');
+        const apiUrl=`/data/cityinfo/${cityCode}.html`;
+        const seqId=++ nextSeqId;
+        const dispatchIfVaild=(action:any)=>{
+            if(seqId==nextSeqId){
+                console.log('请求开始');
+                return dispatch(action);
+            }
+        }
+        dispatchIfVaild(fetchWeatherStarted());
+        fetch(apiUrl).then(response=>{
+            if(response.status!==200){
+                throw new Error('Fail to get response will start'+response.status);
+            }
+            response.json().then(({weatherinfo})=>{
+                dispatch(fetchWeatherSuccess(weatherinfo))
+            })
+            .catch(error=>{
+                throw new Error('Invaild json response'+error);
+            })
+        })
+        .catch(error=>{
+            dispatch(fetchWeatherFilure(error))
+        }).finally(()=>{
+            console.log('数据响应回来');
+        })        
+    }
+}
+```
+ 
